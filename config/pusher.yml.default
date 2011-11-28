@@ -1,0 +1,14 @@
+development:
+  app_id: '1'
+  key: ''
+  secret: ''
+  
+test:
+  app_id: '1'
+  key: ''
+  secret: ''
+
+production:
+  app_id: '1'
+  key: ''
+  secret: ''
