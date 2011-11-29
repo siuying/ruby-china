@@ -8,4 +8,7 @@
 //= require jquery.jdialog
 //= require jquery.timeago
 //= require jquery.hotkeys
+//= require jquery.effects.core
+//= require jquery.effects.bounce
+//= require jquery.effects.fade
 //= require app
