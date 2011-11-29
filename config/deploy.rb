@@ -4,7 +4,7 @@ set :repository,  "git@github.com:siuying/ruby-china.git"
 set :branch, "ruby-hk"
 set :scm, :git
 set :user, "siuying"
-set :deploy_to, "/home/#{user}/www/#{application}"
+set :deploy_to, "/home/#{user}/production/#{application}"
 
 set :deploy_via, :remote_cache
 set :git_shallow_clone, 1
