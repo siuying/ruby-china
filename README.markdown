@@ -9,6 +9,7 @@ This is source code of [Ruby China Group](http://ruby-china.org)
   cp config/config.yml.default config/config.yml
   cp config/mongoid.yml.default config/mongoid.yml
   cp config/redis.yml.default config/redis.yml
+  cp config/pusher.yml.default config/pusher.yml
   bundle install
   bundle update rails
   rake assets:precompile
@@ -55,9 +56,14 @@ cap production remote_rake:invoke task=db:setup
 
 Dalli need memcached 1.4.x +
 
+## Pusher
+
+Real time mention notification using Pusher service. Setup an account at http://pusher.com. Create an app and fill in /config/pusher.yml with API keys/secret.
+
 ## Helpers
 
     render_topic_title(topic)
+
 ## Common Partial
 
 * common/share : for social share
