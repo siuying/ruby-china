@@ -58,6 +58,7 @@ gem 'simple_form', :git => 'git://github.com/plataformatec/simple_form.git'
 gem 'bootstrap-rails', :require => 'bootstrap-rails',
   :git => 'git://github.com/xdite/bootstrap-rails.git'
 
+gem 'pusher'
 
 group :assets do
   gem 'sass-rails', "  ~> 3.1.4"

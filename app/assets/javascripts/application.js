@@ -9,4 +9,7 @@
 //= require jquery.timeago
 //= require jquery.hotkeys
 //= require jquery.chosen
+//= require jquery.effects.core
+//= require jquery.effects.bounce
+//= require jquery.effects.fade
 //= require app

@@ -1,0 +1,15 @@
+<% if current_user %>
+
+<%= javascript_include_tag "notifications" %>
+<script src="http://js.pusherapp.com/1.9/pusher.min.js"></script>
+
+<script type="text/javascript">
+$(function(){
+  var pusher = new Pusher('<%= Pusher.key %>', {encrypted: false});
+  var userChannel = pusher.subscribe('user_<%= current_user.id %>');
+  userChannel.bind('mention', function(data) {
+    Notifications.unread(data['unread']);
+  });
+});
+</script>
+<% end %>
