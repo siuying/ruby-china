@@ -1,17 +1,17 @@
 # coding: utf-8
-set :application, "ruby-china"
-set :repository,  "git://github.com/huacnlee/ruby-china.git"
-set :branch, "master"
+set :application, "ruby-hk"
+set :repository,  "git@github.com:siuying/ruby-china.git"
+set :branch, "ruby-hk"
 set :scm, :git
-set :user, "ruby"
+set :user, "siuying"
 set :deploy_to, "/home/#{user}/www/#{application}"
-set :runner, "ruby"
+
 set :deploy_via, :remote_cache
 set :git_shallow_clone, 1
 
-role :web, "58.215.172.218"                          # Your HTTP server, Apache/etc
-role :app, "58.215.172.218"                          # This may be the same as your `Web` server
-role :db,  "58.215.172.218", :primary => true # This is where Rails migrations will run
+role :web, "luke.ignition.hk"                          # Your HTTP server, Apache/etc
+role :app, "luke.ignition.hk"                          # This may be the same as your `Web` server
+role :db,  "luke.ignition.hk", :primary => true # This is where Rails migrations will run
 
 # unicorn.rb 路径
 set :unicorn_path, "#{deploy_to}/current/config/unicorn.rb"
@@ -66,8 +66,8 @@ after "deploy:symlink", :init_shared_path, :link_shared_config_yaml, :install_ge
 
 
 set :default_environment, {
-  'PATH' => "/home/ruby/.rvm/gems/ruby-1.9.3-p0/bin:/home/ruby/.rvm/gems/ruby-1.9.3-p0@global/bin:/home/ruby/.rvm/rubies/ruby-1.9.3-p0/bin:/home/ruby/.rvm/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games",
+  'PATH' => "/home/#{user}/.rvm/gems/ruby-1.9.3-p0/bin:/home/#{user}/.rvm/gems/ruby-1.9.3-p0@global/bin:/home/#{user}/.rvm/rubies/ruby-1.9.3-p0/bin:/home/#{user}/.rvm/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games",
   'RUBY_VERSION' => 'ruby-1.9.3-p0',
-  'GEM_HOME' => '/home/ruby/.rvm/gems/ruby-1.9.3-p0',
-  'GEM_PATH' => '/home/ruby/.rvm/gems/ruby-1.9.3-p0:/home/ruby/.rvm/gems/ruby-1.9.3-p0@global'
+  'GEM_HOME' => "/home/#{user}/.rvm/gems/ruby-1.9.3-p0",
+  'GEM_PATH' => "/home/#{user}/.rvm/gems/ruby-1.9.3-p0:/home/#{user}/.rvm/gems/ruby-1.9.3-p0@global"
 }
