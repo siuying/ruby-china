@@ -18,9 +18,9 @@ window.App =
     title = encodeURIComponent(title)
     switch site
       when "weibo"
-        App.openUrl("http://v.t.sina.com.cn/share/share.php?url=#{url}&title=#{title}&source=ruby-china.org&content=utf-8")
+        App.openUrl("http://v.t.sina.com.cn/share/share.php?url=#{url}&title=#{title}&source=ruby-hk.org&content=utf-8")
       when "twitter"
-        App.openUrl("https://twitter.com/home?status=#{title}: #{url} @ruby_china")
+        App.openUrl("https://twitter.com/home?status=#{title}: #{url}")
       when "douban"
         App.openUrl("http://www.douban.com/recommend/?url=#{url}&title=#{title}&v=1&r=1")
       when "facebook"
