@@ -74,14 +74,10 @@ end
 
 group :development, :test do
   gem 'rspec-rails', '~> 2.7.0'
-  gem 'delorean'
-  gem 'database_cleaner'
-  gem 'ffaker'
 end
 
 group :test do
   gem 'factory_girl_rails'
-  gem 'simplecov', :require => false
 end
 
 group :production do
