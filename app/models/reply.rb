@@ -54,7 +54,7 @@ class Reply
     end
   end
 
-  after_create :send_notify_reply_mail
+  # after_create :send_notify_reply_mail
   def send_notify_reply_mail
 
     # fetch follower ids from the topic (may or may not include the topic author)
