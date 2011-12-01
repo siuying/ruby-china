@@ -1,3 +1,6 @@
+.vagrant
+package.box
+Vagrantfile
 .bundle
 tmp/
 coverage/
