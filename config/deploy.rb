@@ -3,16 +3,18 @@ set :application, "ruby-hk"
 set :repository,  "git@github.com:siuying/ruby-china.git"
 set :branch, "ruby-hk"
 set :scm, :git
+
 set :user, "siuying"
+set :rvm_ruby, "ruby-1.9.2-p290"
 set :deploy_to, "/home/#{user}/production/#{application}"
 
 set :deploy_via, :remote_cache
 set :git_shallow_clone, 1
 set :use_sudo, false
 
-role :web, "luke.ignition.hk"                          # Your HTTP server, Apache/etc
-role :app, "luke.ignition.hk"                          # This may be the same as your `Web` server
-role :db,  "luke.ignition.hk", :primary => true # This is where Rails migrations will run
+role :web, "202.181.184.27"                          # Your HTTP server, Apache/etc
+role :app, "202.181.184.27"                          # This may be the same as your `Web` server
+role :db,  "202.181.184.27", :primary => true # This is where Rails migrations will run
 
 # unicorn.rb 路径
 set :unicorn_path, "#{deploy_to}/current/config/unicorn.rb"
@@ -67,8 +69,8 @@ after "deploy:symlink", :init_shared_path, :link_shared_config_yaml, :install_ge
 
 
 set :default_environment, {
-  'PATH' => "/home/#{user}/.rvm/gems/ruby-1.9.3-p0/bin:/home/#{user}/.rvm/gems/ruby-1.9.3-p0@global/bin:/home/#{user}/.rvm/rubies/ruby-1.9.3-p0/bin:/home/#{user}/.rvm/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games",
-  'RUBY_VERSION' => 'ruby-1.9.3-p0',
-  'GEM_HOME' => "/home/#{user}/.rvm/gems/ruby-1.9.3-p0",
-  'GEM_PATH' => "/home/#{user}/.rvm/gems/ruby-1.9.3-p0:/home/#{user}/.rvm/gems/ruby-1.9.3-p0@global"
+  'PATH' => "/home/#{user}/.rvm/gems/#{rvm_ruby}/bin:/home/#{user}/.rvm/gems/#{rvm_ruby}@global/bin:/home/#{user}/.rvm/rubies/#{rvm_ruby}/bin:/home/#{user}/.rvm/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games",
+  'RUBY_VERSION' => "#{rvm_ruby}",
+  'GEM_HOME' => "/home/#{user}/.rvm/gems/#{rvm_ruby}",
+  'GEM_PATH' => "/home/#{user}/.rvm/gems/#{rvm_ruby}:/home/#{user}/.rvm/gems/#{rvm_ruby}@global"
 }
