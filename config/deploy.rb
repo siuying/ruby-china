@@ -8,6 +8,7 @@ set :deploy_to, "/home/#{user}/production/#{application}"
 
 set :deploy_via, :remote_cache
 set :git_shallow_clone, 1
+set :use_sudo, false
 
 role :web, "luke.ignition.hk"                          # Your HTTP server, Apache/etc
 role :app, "luke.ignition.hk"                          # This may be the same as your `Web` server
