@@ -7,7 +7,6 @@ class Page
   include Mongoid::Timestamps  
   include Mongoid::BaseModel
   include Mongoid::SoftDelete
-  
   # 页面地址
   field :slug
   field :title
@@ -80,7 +79,7 @@ class Page
   def editors
     User.where(:_id.in => self.editor_ids)
   end
-  
+
   def self.find_by_slug(slug)
     where(:slug => slug).first
   end
