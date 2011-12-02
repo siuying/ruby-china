@@ -2,6 +2,7 @@
 //= require jquery_ujs
 //= require bootstrap-alerts
 //= require bootstrap-dropdown
+//= require bootstrap-tabs
 //= require bootstrap-twipsy
 //= require bootstrap-buttons
 //= require bootstrap-popover
@@ -12,4 +13,5 @@
 //= require jquery.effects.core
 //= require jquery.effects.bounce
 //= require jquery.effects.fade
+//= require jquery.autogrow-textarea
 //= require app

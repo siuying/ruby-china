@@ -52,8 +52,21 @@
 #node_info { 
   margin:0 -10px; padding:0 10px; border-bottom:1px solid #ddd; 
   h1 { text-align:right; font-size:15px; }
-  h2 { display:inline; font-size:16px; margin-right:10px;}
+  h2 { line-height:100%; display:inline; font-size:16px; margin-right:10px;}
   .desc { color:#999; }
+  .feed {
+    float: right;
+    .icon { margin-bottom: -3px; }
+    a {
+      width: auto;
+      padding-left: 18px;
+      color: #B94E22;
+      &:hover {
+        text-decoration: none;
+        color: #333;
+      }
+    }
+  }
 }
 
 #replies {}
@@ -73,7 +86,7 @@
 
 #reply.form textarea { width:578px; }
 
-.edit_tools { text-align:left; margin-bottom:2px; margin-left:148px;}
+.edit_tools { text-align:left; margin-bottom:2px }
 
 .totals ul li { line-height:150%;}
 
@@ -114,4 +127,32 @@
   }
 }
 
-
+.sidebar {
+  .hot_nodes {
+    ul {
+      margin: 0;
+      list-style: none;
+      li {
+        display: inline;
+        margin: 0;
+        padding: 0;
+        a {
+          display: inline-block;
+          margin-right: 3px;
+          margin-bottom: 6px;
+          padding: 2px 10px;
+          color: #778087;
+          text-decoration: none;
+          background-color: #f5f5f5;
+          -moz-border-radius: 3px;
+          -webkit-border-radius: 3px;
+          border-radius: 3px;
+          &:hover {
+            color: white;
+            background-color: #99a;
+          }
+        }
+      }
+    }
+  }
+}
