@@ -55,7 +55,7 @@ class TopicsController < ApplicationController
     @topic = Topic.find(params[:id])
     @topic.hits.incr(1)
     @node = @topic.node
-    @replies = @topic.replies.asc(:_id).all.includes(:user).cache
+    @replies = @topic.replies.asc(:_id).all.includes(:user).cache.reject { |r| r.user.blank? }
     if current_user
       current_user.read_topic(@topic)
       current_user.notifications.where(:reply_id.in => @replies.map(&:id), :read => false).update_all(:read => true)
@@ -98,6 +98,14 @@ class TopicsController < ApplicationController
       redirect_to(topic_path(@topic.id), :notice => t("topics.create_topic_success"))
     else
       render :action => "new"
+    end
+  end
+
+  def preview
+    @body = params[:body]
+
+    respond_to do |format|
+      format.json
     end
   end
 
