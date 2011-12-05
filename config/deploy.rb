@@ -18,7 +18,7 @@ set :unicorn_path, "#{deploy_to}/current/config/unicorn.rb"
 
 namespace :deploy do
   task :start, :roles => :app do
-    run "cd #{deploy_to}/current/; RAILS_ENV=production unicorn_rails -c #{unicorn_path} -D"
+    run "cd #{deploy_to}/current/; RAILS_ENV=production bundle exec unicorn_rails -c #{unicorn_path} -D"
   end
 
   task :stop, :roles => :app do
@@ -63,7 +63,7 @@ task :mongoid_create_indexes, :roles => :web do
 end
 
 task :soulmate_index_users, :roles => :web do
-  run "cd #{deploy_to}/current/; bundle exec rake soulmate:index_users"
+  run "cd #{deploy_to}/current/; RAILS_ENV=production bundle exec rake soulmate:index_users"
 end
 
 after "deploy:symlink", :init_shared_path, :link_shared_config_yaml, :install_gems, :compile_assets, :mongoid_create_indexes, :soulmate_index_users
