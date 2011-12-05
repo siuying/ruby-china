@@ -30,6 +30,10 @@ gem "omniauth-douban", :git => "git://github.com/ballantyne/omniauth-douban.git"
 # permission
 gem "cancan"
 
+# Auto Completion
+gem 'rails3-jquery-autocomplete'
+gem 'soulmate', :git => "git://github.com/siuying/soulmate.git"
+
 # 搜索相关的组件
 gem 'chinese_pinyin', '0.4.1'
 gem "rmmseg-cpp-huacnlee", "0.2.8"
