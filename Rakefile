@@ -21,8 +21,10 @@ namespace :resque do
     
     system("rm /var/run/god/resque-1.8.0*.pid")
   end
-  
-  task :init_soulmate => :environment do
+end
+
+namespace :soulmate do
+  task :index_users => :environment do
     User.all.each do |user|
       user.load_into_soulmate
     end
