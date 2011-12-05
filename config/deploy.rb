@@ -1,7 +1,7 @@
 # coding: utf-8
 set :application, "ruby-hk"
 set :repository,  "git@github.com:siuying/ruby-china.git"
-set :branch, "ruby-hk"
+set :branch, "production"
 set :scm, :git
 
 set :user, "siuying"
