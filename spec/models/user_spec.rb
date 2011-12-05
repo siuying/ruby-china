@@ -38,4 +38,16 @@ describe User do
       user_for_delete1.state.should == -1
     end
   end
+  
+  # test depends on soulmate (needs redis)
+  describe "Index and search for autocomplete" do  
+    it 'index login upon save' do  
+      user.login = "apple"
+      user.save
+
+      results = User.search('app')
+      results.size.should == 1
+      results.first.should == "apple"
+    end    
+  end
 end

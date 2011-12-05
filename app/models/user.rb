@@ -162,7 +162,7 @@ class User
   
   def self.search(term)
     matches = Soulmate::Matcher.new('user').matches_for_term(term)
-    matches.collect {|match| {"id" => match["id"], "label" => match["term"], "value" => match["term"] } }
+    matches.collect {|match| match["term"] }
   end
   
   def bind?(provider)
