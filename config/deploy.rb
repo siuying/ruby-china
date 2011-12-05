@@ -73,7 +73,11 @@ task :mongoid_create_indexes, :roles => :web do
   run "cd #{deploy_to}/current/; bundle exec rake db:mongoid:create_indexes"
 end
 
-after "deploy:symlink", :init_shared_path, :link_shared_config_yaml, :install_gems, :compile_assets, :mongoid_create_indexes
+task :soulmate_index_users, :roles => :web do
+  run "cd #{deploy_to}/current/; bundle exec rake soulmate:index_users"
+end
+
+after "deploy:symlink", :init_shared_path, :link_shared_config_yaml, :install_gems, :compile_assets, :mongoid_create_indexes, :soulmate_index_users
 
 
 set :default_environment, {

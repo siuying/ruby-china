@@ -1,4 +1,6 @@
 //= require jquery
+//= require jquery-ui
+//= require jquery-ui.autocompleteTrigger
 //= require jquery_ujs
 //= require bootstrap-alerts
 //= require bootstrap-dropdown

@@ -39,6 +39,10 @@ class UsersController < ApplicationController
     redirect_to edit_user_registration_path, :flash => {:warring => t("users.unbind_success", :provider => provider.titleize )}
   end
   
+  def autocomplete_login
+    render :json => User.search(params['term'])
+  end
+  
   protected
   def find_user
     @user = User.where(:login => /^#{params[:id]}$/i).first
