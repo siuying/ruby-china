@@ -21,6 +21,9 @@ RubyChina::Application.routes.draw do
   match "account/auth/:provider/unbind", :to => "users#auth_unbind"
   
   resources :users do
+    collection do
+      get :autocomplete_login
+    end
     member do 
       get :replies
       get :likes
