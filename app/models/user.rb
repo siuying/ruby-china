@@ -8,8 +8,6 @@ class User
 
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :trackable, :validatable, :omniauthable
-         
-    
 
   field :login
   field :email
@@ -17,6 +15,7 @@ class User
   field :bio
   field :website
   field :github
+
   # 是否信任用户
   field :verified, :type => Boolean, :default => true
   field :state, :type => Integer, :default => 1
@@ -34,6 +33,7 @@ class User
   has_many :notes
   has_many :replies, :dependent => :destroy
   embeds_many :authorizations
+
   has_many :posts
   has_many :notifications, :class_name => 'Notification::Base', :dependent => :delete
   has_many :photos
@@ -54,7 +54,7 @@ class User
   attr_protected :verified, :replies_count
   
   validates :login, :format => {:with => /\A\w+\z/, :message => '只允许数字、大小写字母和下划线'}, :length => {:in => 3..20}, :presence => true, :uniqueness => {:case_sensitive => false}
-  
+
   has_and_belongs_to_many :following_nodes, :class_name => 'Node', :inverse_of => :followers
   has_and_belongs_to_many :following, :class_name => 'User', :inverse_of => :followers
   has_and_belongs_to_many :followers, :class_name => 'User', :inverse_of => :following
@@ -175,17 +175,19 @@ REDUCE
   end
   
   def self.find_by_email(email)
-    where(:email => email).first
+    if email.blank?
+      nil
+    else
+      where(:email => email).first
+    end
   end
   
   def bind?(provider)
     self.authorizations.collect { |a| a.provider }.include?(provider)
   end
   
-  def bind_service(response)
-    provider = response["provider"]
-    uid = response["uid"]
-    authorizations.create(:provider => provider , :uid => uid ) 
+  def bind_service(provider, uid)
+    authorizations.create!(:provider => provider , :uid => uid ) 
   end
   
   # 是否读过 topic 的最近更新

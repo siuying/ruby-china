@@ -1,28 +1,32 @@
 # coding: utf-8 
 class Users::OmniauthCallbacksController < Devise::OmniauthCallbacksController
-  def self.provides_callback_for(*providers)
-    providers.each do |provider|
-      class_eval %Q{
-        def #{provider}
-          if not current_user.blank?
-            current_user.bind_service(env["omniauth.auth"])#Add an auth to existing
-            redirect_to edit_user_registration_path, :notice => "成功绑定了 #{provider} 帐号。"
-          else
-            @user = User.find_or_create_for_#{provider}(env["omniauth.auth"])
-  
-            if @user.persisted?
-              flash[:notice] = "Signed in with #{provider.to_s.titleize} successfully."
-              sign_in_and_redirect @user, :event => :authentication, :notice => "登陆成功。"
-            else
-              redirect_to new_user_registration_url
-            end
-          end
-        end
-      }
+  def provides_callback
+    logger.info "login succeed, create auth"
+    omniauth = request.env["omniauth.auth"] 
+    user = User.where("authentications.provider" => omniauth['provider'], "authentications.uid" => omniauth['uid']).first
+
+    if user
+      logger.info "user #{user.name} signed in"
+      flash[:notice] = t("devise.sessions.signed_in")
+      sign_in_and_redirect(:user, user)
+
+    elsif current_user
+      logger.info "current user #{current_user.name} bind with provider: #{omniauth['provider']} #{omniauth['uid']}"
+      current_user.bind_service(omniauth['provider'], omniauth['uid'])
+      flash[:notice] = t("devise.omniauth_callbacks.success", :kind => omniauth['provider'])
+      redirect_to authentications_url
+
+    elsif user = User.new_from_provider_data(omniauth)
+      logger.info "new user #{user.name} signed up with provider: #{omniauth['provider']} #{omniauth['uid']}"
+      flash[:notice] = t("devise.registrations.signed_up")
+      sign_in_and_redirect(:user, user)
+
+    else
+      logger.warn "failed create user: omniauth = #{omniauth}"
+      flash[:alert] = t(:fail)
+      redirect_to new_user_registration_url   
     end
   end
-  
-  provides_callback_for :github, :twitter, :douban, :google
 
   # This is solution for existing accout want bind Google login but current_user is always nil
   # https://github.com/intridea/omniauth/issues/185
