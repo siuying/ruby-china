@@ -53,8 +53,6 @@ module RubyChina
   end
 end
 
-require "daemon"
-
 I18n.locale = 'zh-TW'
 
 require 'yaml'
