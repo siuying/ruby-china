@@ -1,8 +1,8 @@
-This is source code of [Ruby China Group](http://ruby-china.org)
+This is the source code of [Ruby China Group](http://ruby-china.org)
 
 ## Install
 
-  * You need to install *Ruby 1.9.2*, *Rubygems* and *Rails 3.1* first.
+  * You need *Ruby 1.9.2+*, *Rubygems* and *Rails 3.2+* first.
   * Install and start *Redis*, *MongoDB*, *memcached*, *Python*, *Pygments*
 
   ```
@@ -12,14 +12,14 @@ This is source code of [Ruby China Group](http://ruby-china.org)
   cp config/pusher.yml.default config/pusher.yml
   cp config/mailman.yml.default config/mailman.yml
   bundle install
-  bundle update rails
   rake assets:precompile
   thin start -O -C config/thin.yml
   ./script/resque start
-  ./script/mailman start
-  easy_install pygments # 或者 pip install pygments
-  ```
+  bundle exec rake sunspot:solr:start
 
+  easy_install pygments # 或者 pip install pygments
+  rake db:migrate
+  ```
 ## Deploy
 
     $ cap deploy
@@ -30,9 +30,9 @@ This is source code of [Ruby China Group](http://ruby-china.org)
 * be sure to use: http://ruby-china.dev/
 * callback url: http://ruby-china.dev/account/auth/github/callback
 
-# Search Reindex
+# Apply Google JSAPI
 
-* rake mongoid_search:index 
+* http://code.google.com/intl/zh-CN/apis/loader/signup.html
 
 ## 麵包屑
 
@@ -75,7 +75,6 @@ Real time mention notification using Pusher service. Setup an account at http://
 
 ## Common Partial
 
-* common/share : for social share
 * common/user\_nav : user\_navigation_bar
 
 ## Facebook Share
@@ -98,3 +97,11 @@ facekbook_enable: false by default
 * [Twitter Bootstrap](https://twitter.github.com/bootstrap)
 
 Forked from [Homeland Project](https://github.com/huacnlee/homeland)
+
+## License
+
+Copyright (c) 2011-2012 Ruby China
+
+Released under the MIT license:
+
+* [www.opensource.org/licenses/MIT](http://www.opensource.org/licenses/MIT)

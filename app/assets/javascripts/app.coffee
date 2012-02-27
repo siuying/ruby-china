@@ -25,6 +25,7 @@ window.App =
         App.openUrl("http://www.douban.com/recommend/?url=#{url}&title=#{title}&v=1&r=1")
       when "facebook"
         App.openUrl("http://www.facebook.com/sharer.php?t=#{title}&u=#{url}")
+
   likeable : (el) ->
     likeable_type = $(el).data("type")
     likeable_id = $(el).data("id")
@@ -36,8 +37,10 @@ window.App =
           type : likeable_type
           id : likeable_id
         success : (re) ->
-          if re == "1"
-            $(el).data("state","liked").attr("class","icon small_liked").attr("title", "取消喜欢")
+          if parseInt(re) >= 0
+            $(el).data("state","liked").attr("title", "取消喜欢")
+            $('span',el).text("#{re}人喜欢")
+            $("i.icon",el).attr("class","icon small_liked")
           else
             App.alert("抱歉，系统异常，提交失败。")
     else
@@ -47,11 +50,20 @@ window.App =
         data : 
           type : likeable_type
         success : (re) ->
-          if re == "1"
-            $(el).data("state","").attr("class","icon small_like").attr("title", "取消喜欢")
+          if parseInt(re)  >= 0
+            $(el).data("state","").attr("title", "喜欢(可用于收藏此贴)")
+            $('span',el).text("#{re}人喜欢")
+            $("i.icon",el).attr("class","icon small_like")
           else
             App.alert("抱歉，系统异常，提交失败。")
     false
+
+  # 绑定 @ 回复功能
+  at_replyable : (el, logins) ->
+    $(el).atWho
+      debug : false
+      data : logins
+      tpl : "<li data-insert='${login}'>${login} <small>${name}</small></li>"
 
 $(document).ready ->
   $("abbr.timeago").timeago()
@@ -60,6 +72,8 @@ $(document).ready ->
   $("a[rel=popover]").popover
     live: true
     html: true
+
+  # 用户头像 Popover
   $("a[rel=userpopover]").popover
     live: true
     html: true
@@ -94,13 +108,24 @@ $(document).ready ->
       return 'left' if isWithinBounds(elementLeft)
       return 'above' if isWithinBounds(elementAbove)
       return 'below'
+
   # 绑定评论框 Ctrl+Enter 提交事件
   $(".cell_comments_new textarea").bind "keydown","ctrl+return",(el) ->
     if $(el.target).val().trim().length > 0
       $(el.target).parent().parent().submit()
     return false
-  $(".share_buttons a").click () ->
-    App.shareTo($(this).data("site"), $(this).parent().data('title'))
-    return false
+  
+  # Choose 样式
   $("select").chosen()
 
+  # CommentAble @ 回复功能
+  commenters = []
+  commenter_exists = []
+  $(".cell_comments .comment .info .name a").each (idx) ->
+    val = 
+      login : $(this).text()
+      name : $(this).data('name')
+    if $.inArray(val.login,commenter_exists) < 0
+       commenters.push(val) 
+       commenter_exists.push(val.login)
+  App.at_replyable(".cell_comments_new textarea", commenters)

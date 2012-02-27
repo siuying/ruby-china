@@ -38,27 +38,17 @@ end
 task :init_shared_path, :roles => :web do
   run "mkdir -p #{deploy_to}/shared/log"
   run "mkdir -p #{deploy_to}/shared/pids"
+  run "mkdir -p #{deploy_to}/shared/assets"
 end
 
-task :link_shared_config_yaml, :roles => :web do
+task :link_shared_files, :roles => :web do
   run "ln -sf #{deploy_to}/shared/config/*.yml #{deploy_to}/current/config/"
   run "ln -sf #{deploy_to}/shared/config/unicorn.rb #{deploy_to}/current/config/"
+  run "ln -s #{deploy_to}/shared/assets #{deploy_to}/current/public/assets"
 end
 
 task :restart_resque, :roles => :web do
   run "cd #{deploy_to}/current/; RAILS_ENV=production ./script/resque stop; RAILS_ENV=production ./script/resque start"
-end
-
-task :start_mailman, :roles => :web do
-  run "cd #{deploy_to}/current/; RAILS_ENV=production ./script/mailman start"
-end
-
-task :stopt_mailman, :roles => :web do
-  run "cd #{deploy_to}/current/; RAILS_ENV=production ./script/mailman stop"
-end
-
-task :restart_mailman, :roles => :web do
-  run "cd #{deploy_to}/current/; RAILS_ENV=production ./script/mailman stop; RAILS_ENV=production ./script/mailman start"
 end
 
 task :install_gems, :roles => :web do  	
@@ -70,14 +60,18 @@ task :compile_assets, :roles => :web do
 end
 
 task :mongoid_create_indexes, :roles => :web do
-  run "cd #{deploy_to}/current/; bundle exec rake db:mongoid:create_indexes"
+  run "cd #{deploy_to}/current/; RAILS_ENV=production bundle exec rake db:mongoid:create_indexes"
 end
 
 task :soulmate_index_users, :roles => :web do
   run "cd #{deploy_to}/current/; RAILS_ENV=production bundle exec rake soulmate:index_users"
 end
 
-after "deploy:symlink", :init_shared_path, :link_shared_config_yaml, :install_gems, :compile_assets, :mongoid_create_indexes, :soulmate_index_users
+task :mongoid_migrate_database, :roles => :web do
+  run "cd #{deploy_to}/current/; RAILS_ENV=production bundle exec rake db:migrate"
+end
+
+after "deploy:finalize_update", "deploy:symlink", :init_shared_path, :link_shared_files, :install_gems, :compile_assets, :mongoid_create_indexes, :mongoid_migrate_database
 
 
 set :default_environment, {

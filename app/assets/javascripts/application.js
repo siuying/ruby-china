@@ -8,12 +8,17 @@
 //= require bootstrap-twipsy
 //= require bootstrap-buttons
 //= require bootstrap-popover
+//= require bootstrap-modal
 //= require jquery.jdialog
 //= require jquery.timeago
+//= require jquery.timeago.settings
 //= require jquery.hotkeys
 //= require jquery.chosen
 //= require jquery.effects.core
 //= require jquery.effects.bounce
 //= require jquery.effects.fade
 //= require jquery.autogrow-textarea
+//= require social-share-button
+//= require jquery.at.js
+//= require jquery.caret.js
 //= require app
