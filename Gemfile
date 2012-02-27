@@ -81,6 +81,7 @@ gem 'sunspot_solr'
 
 gem 'daemon'
 gem 'daemon-spawn'
+gem 'pusher'
 
 # 禁用 assets 日志
 gem 'quiet_assets', :git => 'git://github.com/AgilionApps/quiet_assets.git'
