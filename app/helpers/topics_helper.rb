@@ -1,69 +1,66 @@
-# coding: utf-8  
+# coding: utf-8
+require 'digest/md5'
 module TopicsHelper
   def format_topic_body(text, options = {})
-    options[:title] = ''
-    options[:allow_image] = true
-    mentioned_user_logins = options[:mentioned_user_logins] || []
-    text = h(text)
-    text.gsub!( /\r\n?/, "\n" )
-    text.gsub!( /\n/, "<br>" )
-    text.gsub!(/```(<br>{0,}|\s{0,})(.+?)```(<br>{0,}|\s{0,})/im,'<pre><code>\2</code></pre>')
-    text.gsub!(/\[img\](http:\/\/.+?)\[\/img\]/i,'<img src="\1" alt="'+ h(options[:title]) +'" />') if options[:allow_image]
-    text = auto_link(text,:all, :target => '_blank', :rel => "nofollow")
-    text.gsub!(/#([\d]+)楼\s/,'#<a href="#reply\1" class="at_floor" data-floor="\1" onclick="return Topics.hightlightReply(\1)">\1楼</a> ')
-    link_mention_user!(text, mentioned_user_logins)
-    return raw(text)
+    return '' if text.blank?
+
+    convert_bbcode_img(text) unless options[:allow_image] == false
+    
+    # 如果 ``` 在刚刚换行的时候 Redcapter 无法生成正确，需要两个换行
+    text.gsub!("\n```","\n\n```")
+    
+    result = MarkdownTopicConverter.convert(text)
+
+    link_mention_floor(result)
+    link_mention_user(result)
+
+    return result.strip.html_safe
   end
 
-  # def link_mention_floor!(text)
-  # 
-  #   # matches #X樓, #X楼, #XF, #Xf, with or without :
-  #   # doesn't care if there is a space after the mention command
-  #   expression = /#([\d]+)楼\s/
-  # 
-  #   text.gsub!(expression) do
-  #     floorish = $1
-  # 
-  #     html_options = {
-  #       :class => "at_floor", 
-  #       "data-floor" => floorish,
-  #       :onclick => "return Topics.hightlightReply(#{floorish})"
-  #     }
-  # 
-  #     link_to("##{floorish}樓 ", "#reply#{floorish}", html_options) 
-  #   end
-  # end
-
-  def link_mention_user!(text, mentioned_user_logins)
-    return text if mentioned_user_logins.blank?
-    text.gsub!(/@(#{mentioned_user_logins.join('|')})/,'@<a href="/users/\1" class="at_user" title="\1">\1</a>')
+  # convert bbcode-style image tag [img]url[/img] to markdown syntax ![alt](url)
+  def convert_bbcode_img(text)
+    text.gsub!(/\[img\](.+?)\[\/img\]/i) {"![#{image_alt $1}](#{$1})"}
   end
-  
+
+  # convert '#N楼' to link
+  def link_mention_floor(text)
+    text.gsub!(/#(\d+)([楼樓Ff])/) { link_to "##{$1}#{$2}", "#reply#{$1}", :class => "at_floor", "data-floor" => $1 }
+  end
+
+  # convert '@user' to link
+  # match any user even not exist.
+  def link_mention_user(text)
+    text.gsub!(/(^|[^a-zA-Z0-9_!#\$%&*@＠])@([a-zA-Z0-9_]{1,20})/io) { 
+      "#{$1}" + link_to(raw("<i>@</i>#{$2}"), user_path($2), :class => "at_user", :title => "@#{$2}") 
+    }
+  end
+
   def topic_use_readed_text(state)
     case state
     when true
-      "在你读过以后还没有新变化"
+      t("topics.have_no_new_reply")
     else
-      "有新内容"
+      t("topics.has_new_replies")
     end
   end
 
   def render_topic_title(topic)
+    return t("topics.topic_was_deleted") if topic.blank?
     link_to(topic.title, topic_path(topic), :title => topic.title)
   end
-  
+
   def render_topic_last_reply_time(topic)
     l((topic.replied_at || topic.created_at), :format => :short)
   end
-  
+
   def render_topic_count(topic)
     topic.replies_count
   end
-  
+
   def render_topic_created_at(topic)
     timeago(topic.created_at)
   end
-  
+
   def render_topic_last_be_replied_time(topic)
     timeago(topic.replied_at)
   end

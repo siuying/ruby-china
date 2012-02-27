@@ -1,16 +1,16 @@
 # coding: utf-8
 class PagesController < ApplicationController
-  before_filter :check_lock, :only => [:edit, :update]
-  before_filter :require_user, :only => [:new, :edit, :create, :update]
-  before_filter :check_permissions, :only => [:new, :edit, :create, :update]
+
+  authorize_resource :page
+
   before_filter :init_base_breadcrumb
   before_filter :set_menu_active
-  
+
   def index
     set_seo_meta("Wiki")
     drop_breadcrumb("索引")
   end
-  
+
   def recent
     @pages = Page.recent.paginate(:page => params[:page], :per_page => 30)
     set_seo_meta t("pages.wiki_index")
@@ -19,16 +19,16 @@ class PagesController < ApplicationController
 
   def show
     @page = Page.find_by_slug(params[:id])
-    if !@page
-      if !current_user
-        render_404
-      else
+    if @page.nil?
+      if current_user
         redirect_to new_page_path(:title => params[:id]), :notice => "Page not Found, Please create a new page"
-        return
+      else
+        render_404
       end
+    else
+      set_seo_meta("#{@page.title} - Wiki")
+      drop_breadcrumb("查看 #{@page.title}")
     end
-    set_seo_meta("#{@page.title} - Wiki")
-    drop_breadcrumb("查看 #{@page.title}")
   end
 
   def new
@@ -64,40 +64,21 @@ class PagesController < ApplicationController
     @page = Page.find(params[:id])
     params[:page][:version_enable] = true
     params[:page][:user_id] = current_user.id
-    
+
     if @page.update_attributes(params[:page])
       redirect_to page_path(@page.slug), notice: t("common.update_success")
     else
       render action: "edit"
     end
   end
-  
-  protected
-  
+
+protected
+
   def set_menu_active
     @current = @current = ['/wiki']
   end
-  
+
   def init_base_breadcrumb
     drop_breadcrumb("Wiki", pages_path)
   end
-
-  private
-    def check_lock
-      @page = Page.find(params[:id])
-      if @page.locked
-        if !current_user or !Setting.admin_emails.include?(current_user.email)
-          redirect_to page_path(@page.slug), alert: t("pages.wiki_page_lock_warning")
-          return
-        end
-      end
-    end
-    
-    def check_permissions
-      if not current_user.wiki_editor?
-        render_403
-        return false
-      end
-      true
-    end
 end

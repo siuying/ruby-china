@@ -1,0 +1,41 @@
+#notifications {
+  td.face {
+    padding-right: 8px;
+    width: 48px;
+    margin-left:0;
+
+    img {
+      width: 48px;
+      height: 48px;
+    }
+  }
+
+  td h3 {
+    font-size: 14px;
+    line-height: 18px;
+    padding-bottom: 8px;
+  }
+
+  td.last {
+    text-align: right;
+
+    a.delete {
+    }
+
+    a.delete:hover {
+      text-decoration: none;
+      color: white;
+      background-color: #C43C35;
+    }
+  }
+  .highlight {
+    .pre {
+      width:560px;
+    }
+  }
+  blockquote {
+    img {
+      max-width:530px;
+    }
+  }
+}

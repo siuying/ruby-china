@@ -3,8 +3,14 @@ window.Topics =
   # 往话题编辑器里面插入图片代码
   appendImageFromUpload : (srcs) ->
     txtBox = $(".topic_editor")
+    caret_pos = txtBox.caretPos()
+    src_merged = ""
     for src in srcs
-      txtBox.val("#{txtBox.val()}[img]#{src}[/img]\n")
+      src_merged = "![](#{src})\n"
+    source = txtBox.val()
+    before_text = source.slice(0, caret_pos)
+    txtBox.val(before_text + src_merged + source.slice(caret_pos+1, source.count))
+    txtBox.caretPos(caret_pos+src_merged.length)
     txtBox.focus()
     $("#add_image").jDialog.close()
 
@@ -41,16 +47,83 @@ window.Topics =
     $("#main .alert-message").remove()
     if success
       $("abbr.timeago",$("#replies .reply").last()).timeago()
+      $("abbr.timeago",$("#replies .total")).timeago()
       $("#new_reply textarea").val('')
       App.notice(msg,'#reply')
     else
       App.alert(msg,'#reply')
     $("#new_reply textarea").focus()
-    $('#btn_reply').button('reset')    
-    
+    $('#btn_reply').button('reset')
+
+  preview: (body) ->
+    $("#preview").text "Loading..."
+
+    $.post "/topics/preview",
+      "body": body,
+      (data) ->
+        $("#preview").html data.body
+      "json"
+
+  hookPreview: (switcher, textarea) ->
+    # put div#preview after textarea
+    preview_box = $(document.createElement("div")).attr "id", "preview"
+    preview_box.addClass("body")
+    $(textarea).after preview_box
+    preview_box.hide()
+
+    $(".edit a",switcher).click ->
+      $(".preview",switcher).removeClass("active")
+      $(this).parent().addClass("active")
+      $(preview_box).hide()
+      $(textarea).show()
+      false
+    $(".preview a",switcher).click ->
+      $(".edit",switcher).removeClass("active")
+      $(this).parent().addClass("active")
+      $(preview_box).show()
+      $(textarea).hide()
+      Topics.preview($(textarea).val())
+      false
+
 # pages ready
 $(document).ready ->
   $("textarea").bind "keydown","ctrl+return",(el) ->
     if $(el.target).val().trim().length > 0
       $("#reply form").submit()
     return false
+
+  $("textarea").autogrow()
+
+  $("#new_reply").submit () ->
+    $('#btn_reply').button('loading')
+
+  $("a.at_floor").live 'click', () ->
+    Topics.hightlightReply($(this).data("floor"))
+
+  $("a.small_reply").live 'click', () ->
+    Topics.reply($(this).data("floor"), $(this).data("login"))
+  
+  Topics.hookPreview($(".editor_toolbar"), $(".topic_editor"))
+  
+  $("body").bind "keydown", "m", (el) ->
+    $('#markdown_help_tip_modal').modal
+      keyboard : true
+      backdrop : true
+      show : true
+
+  # @ Reply
+  logins = []
+  login_exists = []
+  author_val =
+    login : $("#topic_show .leader .name a").text(), 
+    name : $("#topic_show .leader .name a").data('name')
+  logins.push(author_val)
+  login_exists.push(author_val.login)
+  $('#replies span.name a').each (idx) ->
+    val = 
+      login : $(this).text()
+      name : $(this).data('name')
+    if $.inArray(val.login,login_exists) < 0
+      login_exists.push(val.login)
+      logins.push(val)
+  App.at_replyable("textarea", logins)

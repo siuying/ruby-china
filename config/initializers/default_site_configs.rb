@@ -26,7 +26,7 @@ eos
 # Footer HTML
 SiteConfig.save_default("footer_html",<<-eos
 <p class="copyright">
- &copy; Ruby China Group. 
+ &copy; Ruby China Group.
 </p>
 eos
 )
@@ -60,5 +60,11 @@ SiteConfig.save_default("topic_index_sidebar_html",<<-eos
     <li><a href="/topics/1">Foo bar</a></li>
   </ul>
 </div>
+eos
+)
+
+# 酷站列表首页头的HTML
+SiteConfig.save_default("site_index_html",<<-eos
+下面列出了基于 Ruby 语言开发的网站。如果你知道还有不在此列表的，请帮忙补充。
 eos
 )

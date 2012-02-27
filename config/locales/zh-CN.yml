@@ -10,6 +10,7 @@
         name: "名字"
         login: "用户名"
         email: "Email"
+        avatar: "头像"
         location: "城市"
         bio: "个人介绍"
         password: "密码"
@@ -39,6 +40,11 @@
         body: 内容
         locked: 锁定开关
         change_desc: 变更描述
+      site:
+        name: 网站名称
+        url: 地址
+        desc: 简单介绍
+        site_node_id: 分类
     errors:
       models:
         user: 用户        

@@ -1,34 +1,38 @@
-This is source code of [Ruby China Group](http://ruby-china.org)
+This is the source code of [Ruby China Group](http://ruby-china.org)
 
 ## Install
 
-  * You need install *Ruby 1.9.2*, *Rubygems* and *Rails 3.1* first.
-  * Install and start *Redis*, *MongoDb*, *memcached*
-  
+  * You need *Ruby 1.9.2+*, *Rubygems* and *Rails 3.2+* first.
+  * Install and start *Redis*, *MongoDB*, *memcached*, *Python*, *Pygments*
+
   ```
   cp config/config.yml.default config/config.yml
   cp config/mongoid.yml.default config/mongoid.yml
   cp config/redis.yml.default config/redis.yml
+  cp config/pusher.yml.default config/pusher.yml
+  cp config/mailman.yml.default config/mailman.yml
   bundle install
-  bundle update rails
   rake assets:precompile
   thin start -O -C config/thin.yml
   ./script/resque start
-  ```
-  
-## Deploy 
+  bundle exec rake sunspot:solr:start
 
+  easy_install pygments # 或者 pip install pygments
+  rake db:migrate
   ```
-  $ cap deploy
-  ```
+## Deploy
 
-cap production remote_rake:invoke task=db:setup
+    $ cap deploy
+    $ cap production remote_rake:invoke task=db:setup
 
 ## OAuth
 
 * be sure to use: http://ruby-china.dev/
 * callback url: http://ruby-china.dev/account/auth/github/callback
 
+# Apply Google JSAPI
+
+* http://code.google.com/intl/zh-CN/apis/loader/signup.html
 
 ## 麵包屑
 
@@ -37,7 +41,7 @@ cap production remote_rake:invoke task=db:setup
     drop_breadcrumb("A Level")
     drop_breadcrumb("B Level")
 
-## Menu    
+## Menu
 
     render_list :class => "menu" do |li|
       li << link_to("Home", "/")
@@ -45,22 +49,32 @@ cap production remote_rake:invoke task=db:setup
 
 ## Bootstrap CSS version
 
-1.4.0 
+1.4.0
 
-## Bootstrap Form 
+## Bootstrap Form
 
 <https://github.com/rafaelfranca/simple_form-bootstrap/blob/master/config/initializers/simple_form.rb>
 
 ## Memcached
 
-Dalli need memcached 1.4.x +
+Dalli requires memcached 1.4.x +
+
+## Pusher
+
+Real time mention notification using Pusher service. Setup an account at http://pusher.com. Create an app and fill in /config/pusher.yml with API keys/secret.
+
+## Mailman
+
+如要啟動電郵回覆功能，請啟動 ./script/mailman
+
+要設定 ./config/mailman.yml 到適當的 pop3 電郵，如果使用 gmail ，請確認已啟動 pop3接收郵件功能。
 
 ## Helpers
 
     render_topic_title(topic)
+
 ## Common Partial
 
-* common/share : for social share
 * common/user\_nav : user\_navigation_bar
 
 ## Facebook Share
@@ -78,6 +92,16 @@ facekbook_enable: false by default
 
 * [Contributors](https://github.com/huacnlee/ruby-china/contributors)
 
-Thanks [Twitter Bootstrap](http://twitter.github.com/bootstrap)
+## Thanks
 
-Forked from [Homeland Project](http://github.com/huacnlee/homeland)
+* [Twitter Bootstrap](https://twitter.github.com/bootstrap)
+
+Forked from [Homeland Project](https://github.com/huacnlee/homeland)
+
+## License
+
+Copyright (c) 2011-2012 Ruby China
+
+Released under the MIT license:
+
+* [www.opensource.org/licenses/MIT](http://www.opensource.org/licenses/MIT)

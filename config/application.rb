@@ -29,15 +29,13 @@ module RubyChina
 
     # The default locale is :en and all translations from config/locales/*.rb,yml are auto loaded.
     config.i18n.load_path += Dir[Rails.root.join('my', 'locales', '*.{rb,yml}').to_s]
-    config.i18n.default_locale = "zh-CN"
+    config.i18n.default_locale = "zh-TW"
 
     # Configure the default encoding used in templates for Ruby 1.9.
     config.encoding = "utf-8"
 
     # Configure sensitive parameters which will be filtered from the log file.
     config.filter_parameters += [:password,:password_confirm]
-
-    config.mongoid.logger = Logger.new($stdout, :warn)
 
     config.mongoid.include_root_in_json = false
 
@@ -48,12 +46,16 @@ module RubyChina
       g.test_framework :rspec
       g.fixture_replacement :factory_girl, :dir => "spec/factories"
     end
+    
+    config.to_prepare { 
+      Devise::Mailer.layout "mailer"
+    }
   end
 end
 
 require "daemon"
 
-I18n.locale = 'zh-CN'
+I18n.locale = 'zh-TW'
 
 require 'yaml'
 YAML::ENGINE.yamler= 'syck'

@@ -1,3 +1,6 @@
+.vagrant
+package.box
+Vagrantfile
 .bundle
 tmp/
 coverage/
@@ -12,7 +15,9 @@ config/database.yml
 config/mongoid.yml
 config/config.yml
 config/redis.yml
+config/mailman.yml
 config/mailer_daemon.yml
+config/pusher.yml
 public/uploads/**/*
 public/topics
 public/topics/**/*
@@ -22,3 +27,7 @@ public/topics/**/*
 *.swo
 .rvmrc
 vendor/ruby
+doc/wiki_repo
+solr/data/
+solr/pids/
+bin/

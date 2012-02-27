@@ -1,4 +1,5 @@
 RubyChina::Application.routes.draw do
+  resources :sites
 
   resources :posts
   resources :pages, :path => "wiki" do
@@ -9,30 +10,32 @@ RubyChina::Application.routes.draw do
   resources :comments
   resources :notes
   match "/uploads/*path" => "gridfs#serve"
-  root :to => "home#index"  
- 
+  root :to => "home#index"
 
-  devise_for :users, :path => "account", :controllers => { 
-    :omniauth_callbacks => "users/omniauth_callbacks" 
-  }
-  
+  devise_for :users, :path => "account", :controllers => {
+      :registrations => :account,
+      :omniauth_callbacks => "users/omniauth_callbacks"
+    }
+
   match "account/auth/:provider/unbind", :to => "users#auth_unbind"
-  
+
+  match "users/location/:id", :to => "users#location", :as => :location_users
   resources :users do
-    member do 
+    member do
       get :replies
       get :likes
-    end 
+    end
   end
   resources :notifications, :only => [:index, :destroy] do
     collection do
       put :mark_all_as_read
     end
   end
-  
+
   resources :nodes
-  
+
   match "topics/node:id" => "topics#node", :as => :node_topics
+  match "topics/node:id/feed" => "topics#node_feed", :as => :feed_node_topics
   match "topics/last" => "topics#recent", :as => :recent_topics
   resources :topics do
     member do
@@ -41,9 +44,11 @@ RubyChina::Application.routes.draw do
     collection do
       get :search
       get :feed
+      post :preview
     end
+    resources :replies
   end
-  resources :replies
+
   resources :photos do
     collection do
       get :tiny_new
@@ -51,7 +56,11 @@ RubyChina::Application.routes.draw do
   end
   resources :likes
 
-  namespace :cpanel do 
+  match "/search" => "search#index", :as => :search
+  match "/search/topics" => "search#topics", :as => :search_topics
+  match "/search/wiki" => "search#wiki", :as => :search_wiki
+
+  namespace :cpanel do
     root :to => "home#index"
     resources :site_configs
     resources :replies
@@ -59,6 +68,7 @@ RubyChina::Application.routes.draw do
       member do
         post :suggest
         post :unsuggest
+        post :undestroy
       end
     end
     resources :nodes
@@ -74,8 +84,10 @@ RubyChina::Application.routes.draw do
       end
     end
     resources :comments
-  end  
-  
+    resources :site_nodes
+    resources :sites
+  end
+
   if Rails.env.development?
     mount UserMailer::Preview => 'mails/user'
   end

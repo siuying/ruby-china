@@ -1,8 +1,10 @@
-# coding: utf-8  
+# coding: utf-8
 class NotesController < ApplicationController
-  before_filter :require_user, :except => [:show]
+
+  load_and_authorize_resource
+
   before_filter :init_base_breadcrumb
-  
+
   def init_base_breadcrumb
     drop_breadcrumb(t("menu.notes"), notes_path)
   end
@@ -15,15 +17,9 @@ class NotesController < ApplicationController
 
   def show
     @note =  Note.find(params[:id])
-    if not @note.publish 
-      if current_user.blank? or @note.user_id != current_user.id
-        render_404 and return
-      end
-    end
     set_seo_meta("查看 &raquo; #{t("menu.notes")}")
     drop_breadcrumb("查看")
   end
-
 
   def new
     @note = current_user.notes.build
@@ -31,16 +27,14 @@ class NotesController < ApplicationController
     drop_breadcrumb(t("common.create"))
   end
 
-
   def edit
     @note = current_user.notes.find(params[:id])
     set_seo_meta("修改 &raquo; #{t("menu.notes")}")
     drop_breadcrumb("修改")
   end
 
-
   def create
-    @note = current_user.notes.new(params[:note])  
+    @note = current_user.notes.new(params[:note])
 
     if @note.save
       redirect_to(@note, :notice => t("common.create_success"))
@@ -48,7 +42,6 @@ class NotesController < ApplicationController
       render :action => "new"
     end
   end
-
 
   def update
     @note = current_user.notes.find(params[:id])
@@ -61,7 +54,7 @@ class NotesController < ApplicationController
   end
 
   def destroy
-    @note = currenr_user.notes.find(params[:id])
+    @note = current_user.notes.find(params[:id])
     @note.destroy
 
     redirect_to(notes_url)

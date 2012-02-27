@@ -1,0 +1,13 @@
+<h1>有人回覆了你所回覆過的主題</h1>
+<p> 
+<%= @reply_author.login %>  回覆了 《<%= render_topic_title(@topic)%>》:
+</p>
+
+<blockquote>
+<%= format_topic_body @reply.body, :allow_image => false %>
+</blockquote>
+
+<% content_for :action_message do %>
+直接回覆這電郵或到以下網址回應：<br />
+<%= topic_url(@topic) %> <%= Setting.app_name %>
+<% end %>
