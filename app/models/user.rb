@@ -136,12 +136,6 @@ REDUCE
     UserMailer.welcome(self.id).deliver
   end
 
-  after_save :load_into_soulmate
-  def load_into_soulmate
-    loader = Soulmate::Loader.new("user")
-    loader.add("term" => login, "id" => id)
-  end
-
   STATE = {
     # 软删除
     :deleted => -1,
